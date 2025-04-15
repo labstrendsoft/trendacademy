@@ -1,6 +1,5 @@
-/* eslint-disable prefer-const */
 'use client';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import {
 	Play,
 	Pause,
@@ -22,75 +21,83 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 	const [progress, setProgress] = useState(0);
 	const [videoEnded, setVideoEnded] = useState(false);
 	const [isFullscreen, setIsFullscreen] = useState(false);
-	const [volume, setVolume] = useState(0.5);
+	const [volume, setVolume] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasError, setHasError] = useState(false);
+	const [isPlaying, setIsPlaying] = useState(false);
 
-	// Manejo de carga del video con timeout y reintentos
+	// Efecto principal para carga inicial del video
 	useEffect(() => {
 		const video = videoRef.current;
 		if (!video) return;
 
+		// eslint-disable-next-line prefer-const
 		let timeoutId: NodeJS.Timeout;
-		let retryCount = 0;
-		const maxRetries = 2;
 
 		const handleSuccess = () => {
 			clearTimeout(timeoutId);
 			setIsLoading(false);
 			setHasError(false);
-			video.volume = volume;
-			video.play().catch(() => {
-				console.warn('Autoplay bloqueado, esperando interacción del usuario.');
-			});
+
+			// Configuración inicial muteada para autoplay
+			video.muted = true;
+			video.volume = 0;
+
+			const playPromise = video.play();
+
+			if (playPromise !== undefined) {
+				playPromise
+					.then(() => {
+						setIsPlaying(true);
+						// Restaurar volumen después de iniciar
+						setTimeout(() => {
+							video.muted = volume === 0;
+							video.volume = volume;
+						}, 1000);
+					})
+					.catch((error) => {
+						console.warn('Autoplay bloqueado:', error);
+						setIsPlaying(false);
+						onShowButton();
+					});
+			}
 		};
 
 		const handleError = () => {
 			clearTimeout(timeoutId);
-			if (retryCount < maxRetries) {
-				retryCount++;
-				video.src = `/video.mp4?retry=${Date.now() + retryCount}`;
-				video.load();
-			} else {
-				setIsLoading(false);
-				setHasError(true);
-			}
+			setIsLoading(false);
+			setHasError(true);
 		};
 
-		const setupListeners = () => {
-			video.addEventListener('loadeddata', handleSuccess);
-			video.addEventListener('canplay', handleSuccess);
-			video.addEventListener('playing', handleSuccess);
-			video.addEventListener('error', handleError);
-			video.addEventListener('stalled', handleError);
-		};
+		timeoutId = setTimeout(handleError, 8000);
 
-		const cleanupListeners = () => {
-			video.removeEventListener('loadeddata', handleSuccess);
-			video.removeEventListener('canplay', handleSuccess);
-			video.removeEventListener('playing', handleSuccess);
-			video.removeEventListener('error', handleError);
-			video.removeEventListener('stalled', handleError);
-		};
+		video.addEventListener('loadeddata', handleSuccess);
+		video.addEventListener('canplay', handleSuccess);
+		video.addEventListener('playing', () => setIsPlaying(true));
+		video.addEventListener('pause', () => setIsPlaying(false));
+		video.addEventListener('error', handleError);
 
-		setupListeners();
-
-		// Timeout de 8 segundos
-		timeoutId = setTimeout(() => {
-			if (isLoading) {
-				handleError();
-			}
-		}, 8000);
-
-		// Precarga con parámetro de caché
-		video.src = `/video.mp4?cache=${Date.now()}`;
+		video.preload = 'auto';
+		video.src = '/video.mp4';
 		video.load();
 
 		return () => {
 			clearTimeout(timeoutId);
-			cleanupListeners();
+			video.removeEventListener('loadeddata', handleSuccess);
+			video.removeEventListener('canplay', handleSuccess);
+			video.removeEventListener('playing', () => setIsPlaying(true));
+			video.removeEventListener('pause', () => setIsPlaying(false));
+			video.removeEventListener('error', handleError);
 		};
-	}, [volume]);
+	}, []);
+
+	// Efecto específico para actualización de volumen
+	useEffect(() => {
+		if (videoRef.current && !isLoading) {
+			videoRef.current.volume = volume;
+			videoRef.current.muted = volume === 0;
+		}
+	}, [volume, isLoading]);
 
 	// Manejo de pantalla completa
 	useEffect(() => {
@@ -104,46 +111,48 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 		};
 	}, []);
 
-	const updateProgress = () => {
+	// Barra de progreso optimizada
+	const updateProgress = useCallback(() => {
 		const video = videoRef.current;
-		if (!video) return;
+		if (!video || video.readyState === 0) return;
 
-		const percentage = (video.currentTime / video.duration) * 100;
-		setProgress(percentage);
+		requestAnimationFrame(() => {
+			const duration = video.duration || 1;
+			const percentage = (video.currentTime / duration) * 100;
+			setProgress(percentage);
 
-		if (video.duration - video.currentTime <= 5) {
-			onShowButton();
-		}
-	};
+			if (duration - video.currentTime <= 5) {
+				onShowButton();
+			}
+		});
+	}, [onShowButton]);
 
-	const togglePlay = () => {
+	const togglePlay = useCallback(() => {
 		const video = videoRef.current;
 		if (!video) return;
 
 		if (video.paused) {
-			video.play().catch((e) => console.error('Error al reproducir:', e));
+			video
+				.play()
+				.then(() => setIsPlaying(true))
+				.catch((e) => console.error('Error al reproducir:', e));
 		} else {
 			video.pause();
+			setIsPlaying(false);
 		}
-	};
+	}, []);
 
-	const toggleMute = () => {
-		const video = videoRef.current;
-		if (!video) return;
+	const toggleMute = useCallback(() => {
+		const newVolume = volume > 0 ? 0 : 0.5;
+		setVolume(newVolume);
+	}, [volume]);
 
-		video.muted = !video.muted;
-	};
-
-	const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const changeVolume = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		const newVolume = parseFloat(e.target.value);
 		setVolume(newVolume);
-		if (videoRef.current) {
-			videoRef.current.volume = newVolume;
-			videoRef.current.muted = newVolume === 0;
-		}
-	};
+	}, []);
 
-	const requestFullScreen = () => {
+	const requestFullScreen = useCallback(() => {
 		if (containerRef.current) {
 			if (!document.fullscreenElement) {
 				containerRef.current.requestFullscreen().catch((e) => {
@@ -153,25 +162,28 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				document.exitFullscreen();
 			}
 		}
-	};
+	}, []);
 
-	const replayVideo = () => {
+	const replayVideo = useCallback(() => {
 		const video = videoRef.current;
 		if (!video) return;
 
 		video.currentTime = 0;
-		video.play().catch((e) => console.error('Error al reproducir:', e));
 		setVideoEnded(false);
-	};
+		video
+			.play()
+			.then(() => setIsPlaying(true))
+			.catch((e) => console.error('Error al reproducir:', e));
+	}, []);
 
-	const handleRetry = () => {
+	const handleRetry = useCallback(() => {
 		setHasError(false);
 		setIsLoading(true);
 		if (videoRef.current) {
-			videoRef.current.src = `/video.mp4?retry=${Date.now()}`;
+			videoRef.current.src = '/video.mp4';
 			videoRef.current.load();
 		}
-	};
+	}, []);
 
 	return (
 		<div
@@ -206,19 +218,19 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			{/* Video */}
 			<video
 				ref={videoRef}
-				src={`/video.mp4`}
+				src="/video.mp4"
 				className={`w-full h-full transition-opacity duration-300 ${
 					isFullscreen ? 'absolute inset-0 object-contain' : 'object-cover'
 				} ${isLoading || hasError ? 'opacity-0' : 'opacity-100'}`}
 				onTimeUpdate={updateProgress}
 				onEnded={() => setVideoEnded(true)}
 				autoPlay
-				muted
+				muted={volume === 0}
 				playsInline
 			/>
 
-			{/* Barra de progreso */}
-			{!isLoading && !hasError && (
+			{/* Barra de progreso (solo cuando el video está reproduciendo) */}
+			{!isLoading && !hasError && !videoEnded && (
 				<div
 					className={`absolute ${
 						isFullscreen
@@ -227,32 +239,32 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 					} h-1 bg-gray-400 rounded-full overflow-hidden`}
 				>
 					<div
-						className="h-full bg-white rounded-full transition-all"
+						className="h-full bg-white rounded-full transition-all duration-100"
 						style={{ width: `${progress}%` }}
 					/>
 				</div>
 			)}
 
-			{/* Controles */}
-			{!isLoading && !hasError && (
+			{/* Controles (solo cuando el video está reproduciendo) */}
+			{!isLoading && !hasError && !videoEnded && (
 				<div
 					className={`absolute ${
 						isFullscreen
 							? 'bottom-0 left-0 right-0 p-4'
 							: 'bottom-0 left-0 right-0 p-3'
-					} bg-gradient-to-t from-black/60 to-transparent flex items-center justify-between transition-opacity duration-300`}
+					} bg-gradient-to-t from-black/60 to-transparent flex items-center justify-between`}
 				>
 					<div className="flex items-center gap-4">
 						{/* Play/Pause */}
 						<button
 							onClick={togglePlay}
 							className="text-white p-2 hover:bg-white/10 rounded-full transition"
-							aria-label={videoRef.current?.paused ? 'Reproducir' : 'Pausar'}
+							aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
 						>
-							{videoRef.current?.paused ? (
-								<Play size={isFullscreen ? 32 : 24} />
-							) : (
+							{isPlaying ? (
 								<Pause size={isFullscreen ? 32 : 24} />
+							) : (
+								<Play size={isFullscreen ? 32 : 24} />
 							)}
 						</button>
 
@@ -261,11 +273,9 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 							<button
 								onClick={toggleMute}
 								className="text-white p-2 hover:bg-white/10 rounded-full transition"
-								aria-label={
-									videoRef.current?.muted ? 'Activar sonido' : 'Silenciar'
-								}
+								aria-label={volume === 0 ? 'Activar sonido' : 'Silenciar'}
 							>
-								{videoRef.current?.muted ? (
+								{volume === 0 ? (
 									<VolumeX size={isFullscreen ? 32 : 24} />
 								) : (
 									<Volume2 size={isFullscreen ? 32 : 24} />
@@ -299,13 +309,13 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				</div>
 			)}
 
-			{/* Volver a ver el video */}
+			{/* Volver a ver el video (solo cuando el video ha terminado) */}
 			{!isLoading && !hasError && videoEnded && (
 				<div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60">
 					<button
 						onClick={replayVideo}
 						className={`bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer transition ${
-							isFullscreen ? 'text-xl' : ''
+							isFullscreen ? 'text-xl' : 'text-sm'
 						}`}
 						aria-label="Volver a ver el video"
 					>
@@ -314,8 +324,8 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				</div>
 			)}
 
-			{/* Botón para salir de pantalla completa */}
-			{!isLoading && !hasError && isFullscreen && (
+			{/* Botón para salir de pantalla completa (solo cuando está en pantalla completa y reproduciendo) */}
+			{!isLoading && !hasError && isFullscreen && !videoEnded && (
 				<button
 					onClick={requestFullScreen}
 					className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition"
