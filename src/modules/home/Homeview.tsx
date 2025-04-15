@@ -6,6 +6,11 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import CustomVideoPlayer from './components/videoCustomize';
+// import CustomVideoPlayer from './components/videoCustomize';
+
+// const CustomVideoPlayer = dynamic(() => import('./components/videoCustomize'), {
+// 	ssr: false,
+// });
 
 const socialLinks = [
 	{
@@ -28,6 +33,12 @@ const socialLinks = [
 
 export const Homeview = () => {
 	const [showButton, setShowButton] = useState(false);
+
+	// const Spinner = () => (
+	// 	<div className="flex justify-center items-center text-white text-2xl">
+	// 		<div className="spinner-border animate-spin h-8 w-8 border-4 border-t-4 border-white rounded-full" />
+	// 	</div>
+	// );
 	return (
 		<div className="min-h-full bg-[#080B1A]">
 			<div className={cn(HomeStyles.fondo, 'h-screen')}>
@@ -48,6 +59,9 @@ export const Homeview = () => {
 					</p>
 
 					<CustomVideoPlayer onShowButton={() => setShowButton(true)} />
+					{/* <CustomVideoPlayer
+						onShowButton={() => setShowButton(true)}
+					/> */}
 
 					<p className="text-[#EFEFEF] mb-4 text-sm text-center">
 						Descubre cómo los grandes salones atraen y fidelizan clientes sin
@@ -64,40 +78,40 @@ export const Homeview = () => {
 							Acceder al curso
 						</a>
 					)}
-					<div className=" flex flex-col justify-center items-center mt-8">
-						<Image
-							src="/logo.webp"
-							alt="logo de trendacademy"
-							className="object-cover w-auto h-auto mb-6 "
-							width={120}
-							height={100}
-						/>
+				</div>
+			</div>
+			<div className=" flex flex-col justify-center items-center ">
+				<Image
+					src="/logo.webp"
+					alt="logo de trendacademy"
+					className="object-cover w-auto h-auto mb-6 "
+					width={120}
+					height={100}
+				/>
 
-						<div className="flex items-center gap-4">
-							{socialLinks.map((social, index) => (
-								<Link
-									key={index}
-									href={social.url}
-									className=" flex items-center  "
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									<Image
-										src={social.icon}
-										alt={social.name}
-										width={25} // Tamaño base para desktop
-										height={25}
-										className="hover:opacity-80 object-contain transition-opacity w-[25px] h-[25px]
+				<div className="flex items-center gap-4">
+					{socialLinks.map((social, index) => (
+						<Link
+							key={index}
+							href={social.url}
+							className=" flex items-center  "
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Image
+								src={social.icon}
+								alt={social.name}
+								width={25} // Tamaño base para desktop
+								height={25}
+								className="hover:opacity-80 object-contain transition-opacity w-[25px] h-[25px]
 									"
-									/>
-								</Link>
-							))}
-						</div>
-					</div>
+							/>
+						</Link>
+					))}
 				</div>
 			</div>
 			<div className="flex flex-col gap-4 text-[#EFEFEF] w-full py-8  max-lg:px-4">
-				<div className="flex md:flex-row flex-col items-center gap-1 md:gap-4 justify-center max-w-[1000px] mx-auto w-full border-b border-white text-sm pb-4">
+				<div className="flex md:flex-row flex-wrap items-center gap-3 md:gap-4 justify-center max-w-[1000px] mx-auto w-full border-b border-white text-xs sm:text-sm pb-4">
 					<span>Términos y condiciones</span>
 					<span>Políticas de privacidad</span>
 					<span>Políticas de Cookies</span>
