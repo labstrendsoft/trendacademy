@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 'use client';
 import { useRef, useState, useEffect } from 'react';
 import {
@@ -23,36 +24,71 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 	const [isFullscreen, setIsFullscreen] = useState(false);
 	const [volume, setVolume] = useState(0.5);
 	const [isLoading, setIsLoading] = useState(true);
+	const [hasError, setHasError] = useState(false);
 
-	// Manejo de carga del video
+	// Manejo de carga del video con timeout y reintentos
 	useEffect(() => {
 		const video = videoRef.current;
 		if (!video) return;
 
-		const handleLoadedData = () => {
+		let timeoutId: NodeJS.Timeout;
+		let retryCount = 0;
+		const maxRetries = 2;
+
+		const handleSuccess = () => {
+			clearTimeout(timeoutId);
 			setIsLoading(false);
+			setHasError(false);
 			video.volume = volume;
-			video
-				.play()
-				.catch(() =>
-					console.warn('Autoplay bloqueado, esperando interacción del usuario.')
-				);
+			video.play().catch(() => {
+				console.warn('Autoplay bloqueado, esperando interacción del usuario.');
+			});
 		};
 
-		const handleWaiting = () => setIsLoading(true);
-		const handlePlaying = () => setIsLoading(false);
-		const handleError = () => setIsLoading(false);
+		const handleError = () => {
+			clearTimeout(timeoutId);
+			if (retryCount < maxRetries) {
+				retryCount++;
+				video.src = `/video.mp4?retry=${Date.now() + retryCount}`;
+				video.load();
+			} else {
+				setIsLoading(false);
+				setHasError(true);
+			}
+		};
 
-		video.addEventListener('loadeddata', handleLoadedData);
-		video.addEventListener('waiting', handleWaiting);
-		video.addEventListener('playing', handlePlaying);
-		video.addEventListener('error', handleError);
+		const setupListeners = () => {
+			video.addEventListener('loadeddata', handleSuccess);
+			video.addEventListener('canplay', handleSuccess);
+			video.addEventListener('playing', handleSuccess);
+			video.addEventListener('error', handleError);
+			video.addEventListener('stalled', handleError);
+		};
+
+		const cleanupListeners = () => {
+			video.removeEventListener('loadeddata', handleSuccess);
+			video.removeEventListener('canplay', handleSuccess);
+			video.removeEventListener('playing', handleSuccess);
+			video.removeEventListener('error', handleError);
+			video.removeEventListener('stalled', handleError);
+		};
+
+		setupListeners();
+
+		// Timeout de 8 segundos
+		timeoutId = setTimeout(() => {
+			if (isLoading) {
+				handleError();
+			}
+		}, 8000);
+
+		// Precarga con parámetro de caché
+		video.src = `/video.mp4?cache=${Date.now()}`;
+		video.load();
 
 		return () => {
-			video.removeEventListener('loadeddata', handleLoadedData);
-			video.removeEventListener('waiting', handleWaiting);
-			video.removeEventListener('playing', handlePlaying);
-			video.removeEventListener('error', handleError);
+			clearTimeout(timeoutId);
+			cleanupListeners();
 		};
 	}, [volume]);
 
@@ -63,8 +99,9 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 		};
 
 		document.addEventListener('fullscreenchange', handleFullscreenChange);
-		return () =>
+		return () => {
 			document.removeEventListener('fullscreenchange', handleFullscreenChange);
+		};
 	}, []);
 
 	const updateProgress = () => {
@@ -127,6 +164,15 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 		setVideoEnded(false);
 	};
 
+	const handleRetry = () => {
+		setHasError(false);
+		setIsLoading(true);
+		if (videoRef.current) {
+			videoRef.current.src = `/video.mp4?retry=${Date.now()}`;
+			videoRef.current.load();
+		}
+	};
+
 	return (
 		<div
 			ref={containerRef}
@@ -136,7 +182,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 					: 'w-full max-w-[800px] aspect-video'
 			}`}
 		>
-			{/* Spinner de carga */}
+			{/* Estado de carga */}
 			{isLoading && (
 				<div className="absolute inset-0 flex flex-col gap-1 items-center justify-center z-10 bg-black/50">
 					<Loader2 className="animate-spin text-white h-8 w-8 md:h-12 md:w-12" />
@@ -144,13 +190,26 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				</div>
 			)}
 
+			{/* Mensaje de error */}
+			{hasError && (
+				<div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-black/50 p-4 text-center">
+					<p className="text-white text-lg mb-4">Error al cargar el video</p>
+					<button
+						onClick={handleRetry}
+						className="bg-[#ff3a8c] text-white px-4 py-2 rounded-lg hover:bg-[#e0357d] transition"
+					>
+						Reintentar
+					</button>
+				</div>
+			)}
+
 			{/* Video */}
 			<video
 				ref={videoRef}
-				src="/video.mp4"
+				src={`/video.mp4`}
 				className={`w-full h-full transition-opacity duration-300 ${
 					isFullscreen ? 'absolute inset-0 object-contain' : 'object-cover'
-				} ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+				} ${isLoading || hasError ? 'opacity-0' : 'opacity-100'}`}
 				onTimeUpdate={updateProgress}
 				onEnded={() => setVideoEnded(true)}
 				autoPlay
@@ -159,7 +218,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			/>
 
 			{/* Barra de progreso */}
-			{!isLoading && (
+			{!isLoading && !hasError && (
 				<div
 					className={`absolute ${
 						isFullscreen
@@ -175,7 +234,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			)}
 
 			{/* Controles */}
-			{!isLoading && (
+			{!isLoading && !hasError && (
 				<div
 					className={`absolute ${
 						isFullscreen
@@ -241,7 +300,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			)}
 
 			{/* Volver a ver el video */}
-			{!isLoading && videoEnded && (
+			{!isLoading && !hasError && videoEnded && (
 				<div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60">
 					<button
 						onClick={replayVideo}
@@ -256,7 +315,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			)}
 
 			{/* Botón para salir de pantalla completa */}
-			{!isLoading && isFullscreen && (
+			{!isLoading && !hasError && isFullscreen && (
 				<button
 					onClick={requestFullScreen}
 					className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition"
