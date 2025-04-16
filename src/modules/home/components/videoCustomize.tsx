@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import {
@@ -33,6 +34,9 @@ declare global {
 
 	interface HTMLVideoElement {
 		webkitEnterFullscreen?: () => void;
+		webkitDisplayingFullscreen?: boolean;
+		webkitbeginfullscreen?: any;
+		webkitendfullscreen?: any;
 	}
 }
 
@@ -137,7 +141,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			video.removeEventListener('pause', () => setIsPlaying(false));
 			video.removeEventListener('error', handleError);
 		};
-	}, [onShowButton]);
+	}, []);
 
 	// Actualización de volumen
 	useEffect(() => {
@@ -148,7 +152,34 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 		}
 	}, [volume, isLoading]);
 
-	// Pantalla completa
+	// Pantalla completa para iOS
+	useEffect(() => {
+		const video = videoRef.current;
+		if (!video) return;
+
+		const handleFullscreenChange = () => {
+			if (video.webkitDisplayingFullscreen) {
+				setIsFullscreen(true);
+				video.controls = true;
+			} else {
+				setIsFullscreen(false);
+				video.controls = false;
+			}
+		};
+
+		video.addEventListener('webkitbeginfullscreen', handleFullscreenChange);
+		video.addEventListener('webkitendfullscreen', handleFullscreenChange);
+
+		return () => {
+			video.removeEventListener(
+				'webkitbeginfullscreen',
+				handleFullscreenChange
+			);
+			video.removeEventListener('webkitendfullscreen', handleFullscreenChange);
+		};
+	}, []);
+
+	// Pantalla completa para otros dispositivos
 	useEffect(() => {
 		const handleFullscreenChange = () => {
 			setIsFullscreen(
@@ -195,7 +226,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				onShowButton();
 			}
 		});
-	}, [onShowButton]);
+	}, []);
 
 	const togglePlay = useCallback(() => {
 		const video = videoRef.current;
@@ -229,30 +260,40 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 		}
 	}, []);
 
-	// Pantalla completa
+	// Función de pantalla completa
 	const requestFullScreen = useCallback(() => {
+		const video = videoRef.current;
 		const container = containerRef.current;
-		if (!container) return;
+		if (!video || !container) return;
 
-		if (!document.fullscreenElement) {
-			if (container.requestFullscreen) {
-				container.requestFullscreen().catch((e) => console.error(e));
-			} else if (container.webkitRequestFullscreen) {
-				container.webkitRequestFullscreen();
-			} else if (container.mozRequestFullScreen) {
-				container.mozRequestFullScreen();
-			} else if (container.msRequestFullscreen) {
-				container.msRequestFullscreen();
-			}
+		const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+		if (isIOS && video.webkitEnterFullscreen) {
+			// Método específico para iOS
+			video.webkitEnterFullscreen();
+			video.controls = true;
 		} else {
-			if (document.exitFullscreen) {
-				document.exitFullscreen();
-			} else if (document.webkitExitFullscreen) {
-				document.webkitExitFullscreen();
-			} else if (document.mozCancelFullScreen) {
-				document.mozCancelFullScreen();
-			} else if (document.msExitFullscreen) {
-				document.msExitFullscreen();
+			// Método estándar para otros navegadores
+			if (!document.fullscreenElement) {
+				if (container.requestFullscreen) {
+					container.requestFullscreen().catch((e) => console.error(e));
+				} else if (container.webkitRequestFullscreen) {
+					container.webkitRequestFullscreen();
+				} else if (container.mozRequestFullScreen) {
+					container.mozRequestFullScreen();
+				} else if (container.msRequestFullscreen) {
+					container.msRequestFullscreen();
+				}
+			} else {
+				if (document.exitFullscreen) {
+					document.exitFullscreen();
+				} else if (document.webkitExitFullscreen) {
+					document.webkitExitFullscreen();
+				} else if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen();
+				} else if (document.msExitFullscreen) {
+					document.msExitFullscreen();
+				}
 			}
 		}
 	}, []);
