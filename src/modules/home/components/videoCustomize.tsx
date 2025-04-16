@@ -15,6 +15,27 @@ interface VideoPlayerProps {
 	onShowButton: () => void;
 }
 
+declare global {
+	interface Document {
+		webkitFullscreenElement?: Element;
+		mozFullScreenElement?: Element;
+		msFullscreenElement?: Element;
+		webkitExitFullscreen?: () => Promise<void>;
+		mozCancelFullScreen?: () => Promise<void>;
+		msExitFullscreen?: () => Promise<void>;
+	}
+
+	interface HTMLElement {
+		webkitRequestFullscreen?: () => Promise<void>;
+		mozRequestFullScreen?: () => Promise<void>;
+		msRequestFullscreen?: () => Promise<void>;
+	}
+
+	interface HTMLVideoElement {
+		webkitEnterFullscreen?: () => void;
+	}
+}
+
 export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -22,11 +43,46 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 	const [videoEnded, setVideoEnded] = useState(false);
 	const [isFullscreen, setIsFullscreen] = useState(false);
 	const [volume, setVolume] = useState(0);
+	const [prevVolume, setPrevVolume] = useState(0.5);
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasError, setHasError] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
+	const [showControls, setShowControls] = useState(false);
+	const [isMobile, setIsMobile] = useState(false);
+	const controlsTimeout = useRef<NodeJS.Timeout | null>(null);
 
-	// Efecto principal para carga inicial de este  video
+	// Detectar si es móvil
+	useEffect(() => {
+		const checkIsMobile = () => {
+			setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+		};
+		checkIsMobile();
+		window.addEventListener('resize', checkIsMobile);
+		return () => window.removeEventListener('resize', checkIsMobile);
+	}, []);
+
+	// Mostrar/ocultar controles
+	const handleShowControls = useCallback(() => {
+		setShowControls(true);
+		if (controlsTimeout.current) {
+			clearTimeout(controlsTimeout.current);
+		}
+		controlsTimeout.current = setTimeout(() => {
+			setShowControls(false);
+		}, 3000);
+	}, []);
+
+	// Resetear el timeout cuando se interactúa
+	const handleControlsInteraction = useCallback(() => {
+		if (controlsTimeout.current) {
+			clearTimeout(controlsTimeout.current);
+		}
+		controlsTimeout.current = setTimeout(() => {
+			setShowControls(false);
+		}, 3000);
+	}, []);
+
+	// Carga inicial del video
 	useEffect(() => {
 		const video = videoRef.current;
 		if (!video) return;
@@ -39,22 +95,14 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			setIsLoading(false);
 			setHasError(false);
 
-			// Configuración inicial muteada para autoplay
-			video.muted = true;
-			video.volume = 0;
+			video.volume = volume;
+			video.muted = volume === 0;
 
 			const playPromise = video.play();
 
 			if (playPromise !== undefined) {
 				playPromise
-					.then(() => {
-						setIsPlaying(true);
-						// Restaurar volumen después de iniciar
-						setTimeout(() => {
-							video.muted = volume === 0;
-							video.volume = volume;
-						}, 1000);
-					})
+					.then(() => setIsPlaying(true))
 					.catch((error) => {
 						console.warn('Autoplay bloqueado:', error);
 						setIsPlaying(false);
@@ -89,29 +137,51 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 			video.removeEventListener('pause', () => setIsPlaying(false));
 			video.removeEventListener('error', handleError);
 		};
-	}, []);
+	}, [onShowButton]);
 
-	// Efecto específico para actualización de volumen
+	// Actualización de volumen
 	useEffect(() => {
-		if (videoRef.current && !isLoading) {
-			videoRef.current.volume = volume;
-			videoRef.current.muted = volume === 0;
+		const video = videoRef.current;
+		if (video && !isLoading) {
+			video.volume = volume;
+			video.muted = volume === 0;
 		}
 	}, [volume, isLoading]);
 
-	// Manejo de pantalla completa
+	// Pantalla completa
 	useEffect(() => {
 		const handleFullscreenChange = () => {
-			setIsFullscreen(!!document.fullscreenElement);
+			setIsFullscreen(
+				!!document.fullscreenElement ||
+					!!document.webkitFullscreenElement ||
+					!!document.mozFullScreenElement ||
+					!!document.msFullscreenElement
+			);
 		};
 
 		document.addEventListener('fullscreenchange', handleFullscreenChange);
+		document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+		document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+		document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
 		return () => {
 			document.removeEventListener('fullscreenchange', handleFullscreenChange);
+			document.removeEventListener(
+				'webkitfullscreenchange',
+				handleFullscreenChange
+			);
+			document.removeEventListener(
+				'mozfullscreenchange',
+				handleFullscreenChange
+			);
+			document.removeEventListener(
+				'MSFullscreenChange',
+				handleFullscreenChange
+			);
 		};
 	}, []);
 
-	// Barra de progreso optimizada
+	// Barra de progreso
 	const updateProgress = useCallback(() => {
 		const video = videoRef.current;
 		if (!video || video.readyState === 0) return;
@@ -143,23 +213,46 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 	}, []);
 
 	const toggleMute = useCallback(() => {
-		const newVolume = volume > 0 ? 0 : 0.5;
-		setVolume(newVolume);
-	}, [volume]);
+		if (volume > 0) {
+			setPrevVolume(volume);
+			setVolume(0);
+		} else {
+			setVolume(prevVolume > 0 ? prevVolume : 0.5);
+		}
+	}, [volume, prevVolume]);
 
 	const changeVolume = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		const newVolume = parseFloat(e.target.value);
 		setVolume(newVolume);
+		if (newVolume > 0) {
+			setPrevVolume(newVolume);
+		}
 	}, []);
 
+	// Pantalla completa
 	const requestFullScreen = useCallback(() => {
-		if (containerRef.current) {
-			if (!document.fullscreenElement) {
-				containerRef.current.requestFullscreen().catch((e) => {
-					console.error('Error al entrar en pantalla completa:', e);
-				});
-			} else {
+		const container = containerRef.current;
+		if (!container) return;
+
+		if (!document.fullscreenElement) {
+			if (container.requestFullscreen) {
+				container.requestFullscreen().catch((e) => console.error(e));
+			} else if (container.webkitRequestFullscreen) {
+				container.webkitRequestFullscreen();
+			} else if (container.mozRequestFullScreen) {
+				container.mozRequestFullScreen();
+			} else if (container.msRequestFullscreen) {
+				container.msRequestFullscreen();
+			}
+		} else {
+			if (document.exitFullscreen) {
 				document.exitFullscreen();
+			} else if (document.webkitExitFullscreen) {
+				document.webkitExitFullscreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.msExitFullscreen) {
+				document.msExitFullscreen();
 			}
 		}
 	}, []);
@@ -170,10 +263,18 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 
 		video.currentTime = 0;
 		setVideoEnded(false);
+		setShowControls(true);
 		video
 			.play()
 			.then(() => setIsPlaying(true))
 			.catch((e) => console.error('Error al reproducir:', e));
+
+		if (controlsTimeout.current) {
+			clearTimeout(controlsTimeout.current);
+		}
+		controlsTimeout.current = setTimeout(() => {
+			setShowControls(false);
+		}, 3000);
 	}, []);
 
 	const handleRetry = useCallback(() => {
@@ -185,14 +286,26 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 		}
 	}, []);
 
+	// Limpiar timeout
+	useEffect(() => {
+		return () => {
+			if (controlsTimeout.current) {
+				clearTimeout(controlsTimeout.current);
+			}
+		};
+	}, []);
+
 	return (
 		<div
 			ref={containerRef}
-			className={`relative bg-black rounded-lg overflow-hidden border-4 border-[#ff3a8c] mb-4 ${
+			className={`group relative bg-black rounded-lg overflow-hidden border-4 border-[#ff3a8c] mb-4 ${
 				isFullscreen
 					? 'fixed inset-0 w-full h-full max-w-none z-50 border-none'
 					: 'w-full max-w-[800px] aspect-video'
 			}`}
+			onMouseEnter={() => !isMobile && setShowControls(true)}
+			onMouseLeave={() => !isMobile && setShowControls(false)}
+			onClick={handleShowControls}
 		>
 			{/* Estado de carga */}
 			{isLoading && (
@@ -227,16 +340,17 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				autoPlay
 				muted={volume === 0}
 				playsInline
+				webkit-playsinline="true"
 			/>
 
-			{/* Barra de progreso (solo cuando el video está reproduciendo) */}
-			{!isLoading && !hasError && !videoEnded && (
+			{/* Barra de progreso (SOLO cuando showControls es true) */}
+			{!isLoading && !hasError && !videoEnded && showControls && (
 				<div
 					className={`absolute ${
 						isFullscreen
 							? 'bottom-20 left-4 right-4'
 							: 'bottom-[60px] sm:bottom-[70px] left-3 right-3'
-					} h-1 bg-gray-400 rounded-full overflow-hidden`}
+					} h-1 bg-gray-400 rounded-full overflow-hidden transition-opacity duration-300`}
 				>
 					<div
 						className="h-full bg-white rounded-full transition-all duration-100"
@@ -245,17 +359,18 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				</div>
 			)}
 
-			{/* Controles (solo cuando el video está reproduciendo) */}
-			{!isLoading && !hasError && !videoEnded && (
+			{/* Controles (SOLO cuando showControls es true) */}
+			{!isLoading && !hasError && !videoEnded && showControls && (
 				<div
 					className={`absolute ${
 						isFullscreen
 							? 'bottom-0 left-0 right-0 p-4'
 							: 'bottom-0 left-0 right-0 p-3'
 					} bg-gradient-to-t from-black/60 to-transparent flex items-center justify-between`}
+					onMouseEnter={handleControlsInteraction}
+					onTouchStart={handleControlsInteraction}
 				>
 					<div className="flex items-center gap-4">
-						{/* Play/Pause */}
 						<button
 							onClick={togglePlay}
 							className="text-white p-2 hover:bg-white/10 rounded-full transition"
@@ -268,7 +383,6 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 							)}
 						</button>
 
-						{/* Mute/Unmute y Control de Volumen */}
 						<div className="flex items-center gap-2">
 							<button
 								onClick={toggleMute}
@@ -296,7 +410,6 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 						</div>
 					</div>
 
-					{/* Fullscreen */}
 					<button
 						onClick={requestFullScreen}
 						className="text-white p-2 hover:bg-white/10 rounded-full transition"
@@ -309,12 +422,12 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				</div>
 			)}
 
-			{/* Volver a ver el video (solo cuando el video ha terminado) */}
+			{/* Volver a ver */}
 			{!isLoading && !hasError && videoEnded && (
 				<div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60">
 					<button
 						onClick={replayVideo}
-						className={`bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer transition ${
+						className={`bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition ${
 							isFullscreen ? 'text-xl' : 'text-sm'
 						}`}
 						aria-label="Volver a ver el video"
@@ -324,7 +437,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 				</div>
 			)}
 
-			{/* Botón para salir de pantalla completa (solo cuando está en pantalla completa y reproduciendo) */}
+			{/* Salir de pantalla completa */}
 			{!isLoading && !hasError && isFullscreen && !videoEnded && (
 				<button
 					onClick={requestFullScreen}
