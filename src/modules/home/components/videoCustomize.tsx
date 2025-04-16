@@ -26,7 +26,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 	const [hasError, setHasError] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 
-	// Efecto principal para carga inicial del video
+	// Efecto principal para carga inicial de este  video
 	useEffect(() => {
 		const video = videoRef.current;
 		if (!video) return;
