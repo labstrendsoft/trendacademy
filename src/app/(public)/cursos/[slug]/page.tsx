@@ -9,7 +9,7 @@ export default async function Page({ params }: PageProps) {
 
 	return (
 		<div>
-			{/* Blog Post: {slug} */}
+			<div className="hidden">Blog Post: {slug}</div>
 			<CoursesPublicView />
 		</div>
 	);
