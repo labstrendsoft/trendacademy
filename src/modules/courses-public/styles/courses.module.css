@@ -1,0 +1,16 @@
+.fondo {
+	background: url('/f1.svg') no-repeat left 0% center,
+		url('/f2.svg') no-repeat right 0% center,
+		radial-gradient(
+			circle at top -15% left 0%,
+			rgb(230, 36, 128, 0.8) -80%,
+			#080b1a2c 30%
+		),
+		radial-gradient(
+			circle at bottom 50% right 10%,
+			rgba(230, 36, 128, 0.8) -120%,
+			/* Mismos colores y opacidad */ #080b1a2c 20%
+		);
+	background-size: cover;
+	background-position: bottom;
+}

@@ -59,24 +59,21 @@ export const Homeview = () => {
 					</p>
 
 					<CustomVideoPlayer onShowButton={() => setShowButton(true)} />
-					{/* <CustomVideoPlayer
-						onShowButton={() => setShowButton(true)}
-					/> */}
 
 					<p className="text-[#EFEFEF] mb-4 text-sm text-center">
 						Descubre cómo los grandes salones atraen y fidelizan clientes sin
 						depender del boca a boca.
 					</p>
 					{showButton && (
-						<a
-							href="/acceso-al-curso"
+						<Link
+							href="/cursos/marketing-belleza"
 							className={cn(
 								HomeStyles.fadeInUpMain,
 								'mb-4	 px-10 py-3.5 bg-[#054C9B] text-white rounded-lg text-xl sm:text-2xl  hover:bg-[#054C9B] transition'
 							)}
 						>
 							Acceder al curso
-						</a>
+						</Link>
 					)}
 				</div>
 			</div>

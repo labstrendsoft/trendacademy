@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useRef, useState, useEffect, useCallback } from 'react';
@@ -390,7 +391,7 @@ export default function CustomVideoPlayer({ onShowButton }: VideoPlayerProps) {
 					className={`absolute ${
 						isFullscreen
 							? 'bottom-20 left-4 right-4'
-							: 'bottom-[60px] sm:bottom-[70px] left-3 right-3'
+							: 'bottom-[60px] sm:bottom-[65px] left-3 right-3'
 					} h-1 bg-gray-400 rounded-full overflow-hidden transition-opacity duration-300`}
 				>
 					<div
