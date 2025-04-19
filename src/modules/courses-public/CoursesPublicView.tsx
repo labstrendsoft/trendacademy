@@ -109,7 +109,7 @@ export const CoursesPublicView = () => {
 						href="/cursos/marketing-belleza"
 						className="mb-4	 px-10 py-2 bg-[#054C9B] text-white rounded-lg text-lg   hover:bg-[#054C9B] transition"
 					>
-						Acceder al curso
+						Comprar Curso
 					</Link>
 				</div>
 				<div className="lg:hidden w-full">
@@ -183,7 +183,7 @@ export const CoursesPublicView = () => {
 					href="/cursos/marketing-belleza"
 					className="mb-20	 px-16 py-2 bg-[#054C9B] text-white rounded-lg text-lg   hover:bg-[#054C9B]  "
 				>
-					Acceder al curso
+					Comprar Curso
 				</Link>
 			</div>
 
