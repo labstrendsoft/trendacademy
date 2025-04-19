@@ -16,9 +16,10 @@
 }
 
 .fondoTop {
-	background: url('/trend-persona.png') no-repeat;
-	background-size: cover;
+	background: url('/trend-persona2.webp') no-repeat;
+	background-size: contain;
 	background-position: bottom right;
+	width: 78%;
 }
 
 .transicionBanner {
@@ -67,7 +68,7 @@
 	margin-right: -10px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
 	.fondoTop {
 		display: none;
 	}

@@ -57,7 +57,7 @@ const BannerBlackFriday = ({ saleEndDate }: BannerBlackFridayProps) => {
 							</span>
 						</div>
 						<p className=" text-white hidden sm:block text-xs sm:text-base font-semibold">
-							Finaliza la Oferta !
+							Termina la Oferta !
 						</p>
 
 						{/* <Button size="sm" className="text-sm">

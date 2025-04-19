@@ -60,16 +60,16 @@ export const CoursesPublicView = () => {
 			</div>
 			<div
 				className={cn(
-					'relative max-w-[1100px] mx-auto  pt-16 lg:pt-[70px] lg:pb-[70px]'
+					'relative max-w-[1200px] mx-auto  pt-16  lg:pt-[100px] lg:pb-[150px] overflow-hidden'
 				)}
 			>
 				<div
 					className={cn(
 						CoursesStyles.fondoTop,
-						' absolute w-full h-full top-0 max-w-[950px] right-0'
+						' absolute  h-full top-5 max-w-[950px] right-0'
 					)}
 				/>
-				<div className="max-w-[560px] max-lg:mx-auto flex flex-col justify-center items-center relative z-10 ">
+				<div className="max-w-[450px] xl:max-w-[560px] max-lg:mx-auto flex flex-col justify-center items-center relative z-10 ">
 					<Image
 						src={logoTrend}
 						alt="logo de trendacademy"
@@ -83,7 +83,7 @@ export const CoursesPublicView = () => {
 						¡No esperes más, transforma tu salón hoy!
 					</p>
 
-					<div className="flex items-end justify-center gap-2 mb-10">
+					<div className="flex items-end justify-center gap-2 mb-10 lg:mb-12">
 						<div className="pl-8 pr-6 relative pb-2 text-white ">
 							<div className="text-[10px] absolute left-2 -top-1.5 font-bold flex flex-col leading-none">
 								Precio <span>Normal</span>
@@ -131,11 +131,11 @@ export const CoursesPublicView = () => {
 			<Lanzamiento />
 
 			<div className="px-8">
-				<div className="bg-[#111827] p-8 rounded-xl max-w-xl mx-auto border border-[#E62480] mt-10 mb-4">
+				<div className="bg-[#111827] px-8 py-6 rounded-xl max-w-xl mx-auto border border-[#E62480] mt-10 mb-5">
 					<div className="space-y-4">
 						{features.map((feature, index) => (
 							<div key={index} className="flex items-start gap-3">
-								<div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mt-0.5">
+								<div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#054C9B] flex items-center justify-center mt-0.5">
 									<Check className="w-3 h-3 text-white" />
 								</div>
 								<p className="text-white text-base">{feature}</p>
@@ -181,7 +181,7 @@ export const CoursesPublicView = () => {
 
 				<Link
 					href="/cursos/marketing-belleza"
-					className="mb-10	 px-16 py-2 bg-[#054C9B] text-white rounded-lg text-lg   hover:bg-[#054C9B]  "
+					className="mb-20	 px-16 py-2 bg-[#054C9B] text-white rounded-lg text-lg   hover:bg-[#054C9B]  "
 				>
 					Acceder al curso
 				</Link>

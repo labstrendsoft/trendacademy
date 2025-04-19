@@ -66,7 +66,7 @@ export const Homeview = () => {
 
 					<CustomVideoPlayer onShowButton={() => setShowButton(true)} />
 
-					<p className="text-[#EFEFEF] mb-4 text-sm text-center">
+					<p className="text-[#EFEFEF] mb-8 text-sm text-center">
 						Descubre cómo los grandes salones atraen y fidelizan clientes sin
 						depender del boca a boca.
 					</p>

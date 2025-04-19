@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import AdornoPc from '../../../../public/adorno10.png';
+import AdornoPc from '../../../../public/adorno-laptop.webp';
 
 export default function CourseAccessFeatures() {
 	const features = [
@@ -33,7 +33,7 @@ export default function CourseAccessFeatures() {
 	];
 
 	return (
-		<div className="bg-[#0c0c1d] text-white py-16 px-4 md:px-8">
+		<div className="bg-[#0c0c1d] text-white pt-16 px-4 md:px-8">
 			<div className="max-w-[800px] mx-auto px-4 md:px-0">
 				<h2 className="text-2xl md:text-3xl font-bold text-start sm:text-center mb-10 max-w-[400px] md:max-w-[500px] sm:mx-auto">
 					Accede al curso en cualquier momento y lugar
@@ -73,7 +73,7 @@ export default function CourseAccessFeatures() {
 				<div className="mt-10 text-center">
 					<Link
 						href="/cursos/marketing-belleza"
-						className="mb-4	 px-10 py-3.5 bg-[#054C9B] text-white rounded-lg text-xl sm:text-2xl  hover:bg-[#054C9B] transition"
+						className="mb-4	 px-10 py-2 bg-[#054C9B] text-white rounded-lg text-lg   hover:bg-[#054C9B] transition"
 					>
 						Acceder al curso
 					</Link>
