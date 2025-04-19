@@ -9,12 +9,23 @@ import CourseAccessFeatures from './components/AccesoCurso';
 import { Testimonios } from './components/Testimonios';
 import { Lanzamiento } from './components/Lanzamiento';
 import { Check } from 'lucide-react';
+import CoursesStyles from './styles/courses.module.css';
+import { cn } from '@/lib/utils';
+import logoTrend from '../../../public/logo.webp';
+import fbIcon from '../../../public/redes/fb.webp';
+import wspIcon from '../../../public/redes/wsp.webp';
+import igIcon from '../../../public/redes/ig.webp';
+import ytIcon from '../../../public/redes/yt.webp';
+import trendPersonas from '../../../public/trend-personas-movil.png';
 
 // Forzar que el componente se renderice solo en el cliente
 const BannerBlackFriday = dynamic(
 	() => import('@/common/components/countDownTimer'),
 	{
 		ssr: false,
+		loading: () => (
+			<div style={{ height: '58px' }} className="w-full bg-black" />
+		),
 	}
 );
 const features = [
@@ -26,35 +37,45 @@ const socialLinks = [
 	{
 		name: 'Facebook',
 		url: 'https://www.facebook.com/agenciadepublicidadparabellezatrend',
-		icon: '/redes/fb.webp',
+		icon: fbIcon,
 	},
 	{
 		name: 'Whatsapp',
 		url: 'https://instagram.com',
-		icon: '/redes/wsp.webp',
+		icon: wspIcon,
 	},
 	{
 		name: 'Instagram',
 		url: 'https://www.instagram.com/trend_belleza',
-		icon: '/redes/ig.webp',
+		icon: igIcon,
 	},
-	{ name: 'Youtube', url: 'https://twitter.com', icon: '/redes/yt.webp' },
+	{ name: 'Youtube', url: 'https://twitter.com', icon: ytIcon },
 ];
 export const CoursesPublicView = () => {
 	return (
 		<div className="bg-black ">
 			{/* Otro Banner con una fecha diferente */}
-			<BannerBlackFriday saleEndDate={new Date('2025-05-08T23:59:59')} />
-			<div className="max-w-[1000px] mx-auto py-20">
-				<div className="max-w-[560px] flex flex-col justify-center items-center ">
+			<div className={cn(CoursesStyles.transicionBanner, 'sticky z-30 top-0')}>
+				<BannerBlackFriday saleEndDate={new Date('2025-05-08T23:59:59')} />
+			</div>
+			<div
+				className={cn(
+					'relative max-w-[1100px] mx-auto  pt-16 lg:pt-[70px] lg:pb-[70px]'
+				)}
+			>
+				<div
+					className={cn(
+						CoursesStyles.fondoTop,
+						' absolute w-full h-full top-0 max-w-[950px] right-0'
+					)}
+				/>
+				<div className="max-w-[560px] max-lg:mx-auto flex flex-col justify-center items-center relative z-10 ">
 					<Image
-						src="/logo.webp"
+						src={logoTrend}
 						alt="logo de trendacademy"
-						className="object-cover w-[150px]  mb-10"
-						width={130}
-						height={100}
+						className="object-contain w-[120px] lg:w-[150px] h-auto  mb-6 lg:mb-10"
 					/>
-					<p className="text-xl text-white font-bold  leading-tight max-w-[480px] text-center mb-4">
+					<p className="text-lg lg:text-xl text-white font-bold  leading-tight max-w-[480px] text-center mb-4 px-2">
 						Convierte tu salón en un negocio rentable con los métodos y
 						estrategias que utilizan los mejores salones del mundo
 					</p>
@@ -62,7 +83,7 @@ export const CoursesPublicView = () => {
 						¡No esperes más, transforma tu salón hoy!
 					</p>
 
-					<div className="flex items-end gap-2 mb-8">
+					<div className="flex items-end justify-center gap-2 mb-10">
 						<div className="pl-8 pr-6 relative pb-2 text-white ">
 							<div className="text-[10px] absolute left-2 -top-1.5 font-bold flex flex-col leading-none">
 								Precio <span>Normal</span>
@@ -70,12 +91,12 @@ export const CoursesPublicView = () => {
 							<div className="absolute left-2 right-0 top-[45%] h-[1.5px] bg-white translate-y-[-50%] mx-4"></div>
 
 							<span className="text-sm font-bold">S/</span>
-							<span className="text-3xl font-bold ml-1">799</span>
+							<span className="text-2xl lg:text-3xl font-bold ml-1">799</span>
 							<span className="text-xl font-bold">.00</span>
 						</div>
 
 						<div className="pl-7 pr-5 relative py-2 rounded-xl bg-gradient-to-r from-[#054C9B] to-rose-400 border-2 border-[#FF00C9] shadow-lg text-white">
-							<span className="text-[10px] absolute left-3 top-3 font-bold">
+							<span className="text-[10px] absolute left-3 top-2.5 font-bold">
 								Oferta
 							</span>
 							<span className="text-sm font-bold">S/</span>
@@ -91,6 +112,17 @@ export const CoursesPublicView = () => {
 						Acceder al curso
 					</Link>
 				</div>
+				<div className="lg:hidden w-full">
+					<Image
+						src={trendPersonas}
+						alt="foto del equipo trend"
+						className="object-cover max-w-[400px] w-full mx-auto pr-10"
+					/>
+				</div>
+				<p className="text-center mt-8 w-full text-xs lg:text-sm absolute bottom-4 px-2 lg:bottom-6 z-10 text-white max-w-[400px] lg:max-w-full left-1/2 -translate-x-1/2 leading-snug">
+					Descubre cómo los grandes salones atraen y fidelizan clientes sin
+					depender del boca a boca.
+				</p>
 			</div>
 
 			<BeautyCourseBenefits />
@@ -98,25 +130,30 @@ export const CoursesPublicView = () => {
 			<Testimonios />
 			<Lanzamiento />
 
-			<div className="bg-[#111827] p-8 rounded-xl max-w-xl mx-auto">
-				<div className="space-y-4">
-					{features.map((feature, index) => (
-						<div key={index} className="flex items-start gap-3">
-							<div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mt-0.5">
-								<Check className="w-3 h-3 text-white" />
+			<div className="px-8">
+				<div className="bg-[#111827] p-8 rounded-xl max-w-xl mx-auto border border-[#E62480] mt-10 mb-4">
+					<div className="space-y-4">
+						{features.map((feature, index) => (
+							<div key={index} className="flex items-start gap-3">
+								<div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mt-0.5">
+									<Check className="w-3 h-3 text-white" />
+								</div>
+								<p className="text-white text-base">{feature}</p>
 							</div>
-							<p className="text-white text-base">{feature}</p>
-						</div>
-					))}
+						))}
+					</div>
 				</div>
 			</div>
 
 			<div className="max-w-[1000px] mx-auto flex flex-col justify-center items-center">
-				<p className="text-[#EFEFEF] mb-8 text-sm text-center">
+				<p className="text-[#EFEFEF]  text-center">
+					¡Oferta especial! Precio reducido por tiempo limitado.
+				</p>
+				<p className="text-[#EFEFEF] mb-10 text-sm text-center">
 					¡No esperes más, transforma tu salón hoy!
 				</p>
 
-				<div className="flex items-end justify-center gap-2 mb-8">
+				<div className="flex items-end justify-center gap-2 mb-10">
 					<div className="pl-8 pr-6 relative pb-2 text-white ">
 						<div className="text-[10px] absolute left-2 -top-1.5 font-bold flex flex-col leading-none">
 							Precio <span>Normal</span>
@@ -124,12 +161,12 @@ export const CoursesPublicView = () => {
 						<div className="absolute left-2 right-0 top-[45%] h-[1.5px] bg-white translate-y-[-50%] mx-4"></div>
 
 						<span className="text-sm font-bold">S/</span>
-						<span className="text-3xl font-bold ml-1">799</span>
+						<span className="text-2xl lg:text-3xl font-bold ml-1">799</span>
 						<span className="text-xl font-bold">.00</span>
 					</div>
 
 					<div className="pl-7 pr-5 relative py-2 rounded-xl bg-gradient-to-r from-[#054C9B] to-rose-400 border-2 border-[#FF00C9] shadow-lg text-white">
-						<span className="text-[10px] absolute left-3 top-3 font-bold">
+						<span className="text-[10px] absolute left-3 top-2.5 font-bold">
 							Oferta
 						</span>
 						<span className="text-sm font-bold">S/</span>
@@ -138,9 +175,13 @@ export const CoursesPublicView = () => {
 					</div>
 				</div>
 
+				<p className="text-[#EFEFEF] mb-2 text-xs text-center">
+					Acceso inmediato al curso al inscribirte.
+				</p>
+
 				<Link
 					href="/cursos/marketing-belleza"
-					className="mb-4	 px-10 py-2 bg-[#054C9B] text-white rounded-lg text-lg   hover:bg-[#054C9B]  "
+					className="mb-10	 px-16 py-2 bg-[#054C9B] text-white rounded-lg text-lg   hover:bg-[#054C9B]  "
 				>
 					Acceder al curso
 				</Link>
@@ -148,11 +189,9 @@ export const CoursesPublicView = () => {
 
 			<div className=" flex flex-col justify-center items-center ">
 				<Image
-					src="/logo.webp"
+					src={logoTrend}
 					alt="logo de trendacademy"
-					className="object-cover w-auto h-auto mb-6 "
-					width={120}
-					height={100}
+					className="object-cover w-[120px] h-auto mb-6 "
 				/>
 
 				<div className="flex items-center gap-4">
@@ -167,8 +206,6 @@ export const CoursesPublicView = () => {
 							<Image
 								src={social.icon}
 								alt={social.name}
-								width={25} // Tamaño base para desktop
-								height={25}
 								className="hover:opacity-80 object-contain transition-opacity w-[25px] h-[25px]
 									"
 							/>

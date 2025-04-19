@@ -2,24 +2,24 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import CoursesStyles from '../styles/courses.module.css';
 import Image from 'next/image';
+import cursoImg from '../../../../public/curso1.png';
 
 interface CourseCardProps {
 	title: string;
-	imageSrc: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	imageSrc: any;
 	altText: string;
 }
 function CourseCard({ title, imageSrc, altText }: CourseCardProps) {
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col max-sm:min-w-[300px] max-sm:mx-auto">
 			<div className="relative bg-gradient-to-br from-purple-900 to-blue-900 rounded-lg overflow-hidden h-48">
-				<div className="absolute top-2 left-2 bg-white text-black text-xs font-bold px-3 py-1 rounded-md">
+				<div className="absolute top-2 left-2 bg-white text-black text-xs font-bold px-3 py-1 rounded-md z-10">
 					CURSO
 				</div>
 				<Image
 					src={imageSrc || '/placeholder.svg'}
 					alt={altText}
-					width={300}
-					height={200}
 					className="w-full h-full object-cover opacity-80"
 				/>
 			</div>
@@ -34,43 +34,48 @@ export const Lanzamiento = () => {
 		{
 			id: 1,
 			title: 'Marketing para Salones de Belleza',
-			imageSrc: '/placeholder.svg?height=200&width=300',
+			imageSrc: cursoImg,
 			altText: 'Marketing para Salones de Belleza',
 		},
 		{
 			id: 2,
 			title: 'Fotografía y Video para Salones con Celular',
-			imageSrc: '/placeholder.svg?height=200&width=300',
+			imageSrc: cursoImg,
 			altText: 'Fotografía y Video para Salones con Celular',
 		},
 		{
 			id: 3,
 			title: 'Instagram para Salones de Belleza',
-			imageSrc: '/placeholder.svg?height=200&width=300',
+			imageSrc: cursoImg,
 			altText: 'Instagram para Salones de Belleza',
 		},
 		{
 			id: 4,
 			title: 'WhatsApp para Profesionales',
-			imageSrc: '/placeholder.svg?height=200&width=300',
+			imageSrc: cursoImg,
 			altText: 'WhatsApp para Profesionales',
 		},
 		{
 			id: 5,
 			title: 'El Poder de la Marca',
-			imageSrc: '/placeholder.svg?height=200&width=300',
+			imageSrc: cursoImg,
 			altText: 'El Poder de la Marca',
 		},
 		{
 			id: 6,
 			title: 'Cap Cut Pro',
-			imageSrc: '/placeholder.svg?height=200&width=300',
+			imageSrc: cursoImg,
 			altText: 'Cap Cut Pro',
 		},
 	];
 	return (
-		<div className={cn(CoursesStyles.fondo, 'h-screen')}>
-			<div className="text-center py-20">
+		<div
+			className={cn(
+				CoursesStyles.fondo,
+				'lg:h-screen bg-[#080B1A] flex items-center justify-center py-20 px-8'
+			)}
+		>
+			<div className="text-center  ">
 				<p className="text-white text-lg mb-6">¡Solo por lanzamiento!</p>
 				<h2 className="text-2xl md:text-3xl font-bold text-center mb-8 max-w-[800px] mx-auto text-white">
 					Accede por un año a toda nuestra plataforma de cursos y

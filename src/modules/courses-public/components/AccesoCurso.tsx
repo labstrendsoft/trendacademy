@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import AdornoPc from '../../../../public/adorno10.png';
 
 export default function CourseAccessFeatures() {
 	const features = [
@@ -17,7 +18,7 @@ export default function CourseAccessFeatures() {
 		{
 			id: 3,
 			title: 'Actualizaciones de contenido',
-			description: '',
+			description: 'Tendrás las mejores novedades de la plataforma.',
 		},
 		{
 			id: 4,
@@ -33,13 +34,13 @@ export default function CourseAccessFeatures() {
 
 	return (
 		<div className="bg-[#0c0c1d] text-white py-16 px-4 md:px-8">
-			<div className="max-w-[800px] mx-auto">
-				<h2 className="text-2xl md:text-3xl font-bold text-center mb-10 max-w-[500px] mx-auto">
+			<div className="max-w-[800px] mx-auto px-4 md:px-0">
+				<h2 className="text-2xl md:text-3xl font-bold text-start sm:text-center mb-10 max-w-[400px] md:max-w-[500px] sm:mx-auto">
 					Accede al curso en cualquier momento y lugar
 				</h2>
 
-				<div className="grid grid-cols-1 lg:grid-cols-2  items-center">
-					<div className="space-y-6">
+				<div className="grid grid-cols-1 md:grid-cols-2  items-center">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-1">
 						{features.map((feature) => (
 							<div key={feature.id} className="flex items-start gap-3">
 								<div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#054C9B] flex items-center justify-center mt-1">
@@ -60,13 +61,11 @@ export default function CourseAccessFeatures() {
 						</p>
 					</div>
 
-					<div className="">
+					<div className="max-w-[300px] mx-auto mt-6 md:mt-0">
 						<Image
-							src="/adorno10.png"
+							src={AdornoPc}
 							alt="Plataforma del curso"
-							width={400}
-							height={250}
-							className="object-cover rounded-md"
+							className="object-cover rounded-md select-none pointer-events-none"
 						/>
 					</div>
 				</div>

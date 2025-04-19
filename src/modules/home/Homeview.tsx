@@ -6,6 +6,12 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import CustomVideoPlayer from './components/videoCustomize';
+
+import logoTrend from '../../../public/logo.webp';
+import fbIcon from '../../../public/redes/fb.webp';
+import wspIcon from '../../../public/redes/wsp.webp';
+import igIcon from '../../../public/redes/ig.webp';
+import ytIcon from '../../../public/redes/yt.webp';
 // import CustomVideoPlayer from './components/videoCustomize';
 
 // const CustomVideoPlayer = dynamic(() => import('./components/videoCustomize'), {
@@ -16,19 +22,19 @@ const socialLinks = [
 	{
 		name: 'Facebook',
 		url: 'https://www.facebook.com/agenciadepublicidadparabellezatrend',
-		icon: '/redes/fb.webp',
+		icon: fbIcon,
 	},
 	{
 		name: 'Whatsapp',
 		url: 'https://instagram.com',
-		icon: '/redes/wsp.webp',
+		icon: wspIcon,
 	},
 	{
 		name: 'Instagram',
 		url: 'https://www.instagram.com/trend_belleza',
-		icon: '/redes/ig.webp',
+		icon: igIcon,
 	},
-	{ name: 'Youtube', url: 'https://twitter.com', icon: '/redes/yt.webp' },
+	{ name: 'Youtube', url: 'https://twitter.com', icon: ytIcon },
 ];
 
 export const Homeview = () => {
@@ -79,11 +85,9 @@ export const Homeview = () => {
 			</div>
 			<div className=" flex flex-col justify-center items-center ">
 				<Image
-					src="/logo.webp"
+					src={logoTrend}
 					alt="logo de trendacademy"
-					className="object-cover w-auto h-auto mb-6 "
-					width={120}
-					height={100}
+					className="object-cover w-[120px] h-auto mb-6 "
 				/>
 
 				<div className="flex items-center gap-4">
@@ -98,8 +102,6 @@ export const Homeview = () => {
 							<Image
 								src={social.icon}
 								alt={social.name}
-								width={25} // Tamaño base para desktop
-								height={25}
 								className="hover:opacity-80 object-contain transition-opacity w-[25px] h-[25px]
 									"
 							/>
