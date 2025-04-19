@@ -27,7 +27,10 @@ const BannerBlackFriday = ({ saleEndDate }: BannerBlackFridayProps) => {
 					height={18}
 				/>
 				<div className="flex gap-3 justify-center items-center">
-					<p className=" text-white text-xs sm:text-base font-semibold">En</p>
+					<p className=" text-white text-xs sm:text-base font-semibold flex flex-col items-center">
+						<span className="mr-1 leading-none sm:hidden">Termina</span>
+						En
+					</p>
 					<div className="flex items-center gap-3 max-md:flex-wrap">
 						<div className="flex items-center  rounded-lg  ">
 							{timeLeft.days > 0 && (
