@@ -3,11 +3,6 @@ import { Nav } from '../types/nav';
 export function getMenuList(pathname: string): Nav[] {
 	return [
 		{
-			name: 'Inicio',
-			href: '/',
-			active: pathname === '/',
-		},
-		{
 			name: 'Nosotros',
 			href: '/Nosotros',
 			active: pathname === '/Nosotros',

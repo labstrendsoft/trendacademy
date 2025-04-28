@@ -28,7 +28,7 @@ export default function ButtonAcademy({
 		text: 'text-white hover:text-gray-50', // Solo texto, sin fondo
 		filled:
 			'bg-trendacademy-rosado text-white hover:bg-[#d11f73] rounded-[5px] px-4 py-1.5 ', // Fondo azul con texto blanco
-		icon: 'text-blue-500 hover:text-blue-700 rounded-[5px] px-4 py-1.5', // Icono, texto azul
+		icon: 'bg-trendacademy-rosado text-white hover:bg-[#d11f73] rounded-[5px] px-4 py-1.5', // Icono, texto azul
 	};
 
 	// Combinación final de clases usando cn de ShadCN
@@ -43,7 +43,7 @@ export default function ButtonAcademy({
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				{icon && <span className="mr-2">{icon}</span>}
+				{icon && <span>{icon}</span>}
 				{children}
 			</a>
 		);
@@ -52,7 +52,7 @@ export default function ButtonAcademy({
 	// Enlaces internos con <Link>
 	return (
 		<Link href={href} className={finalClassName}>
-			{icon && <span className="mr-2 ">{icon}</span>}
+			{icon && <span>{icon}</span>}
 			{children}
 		</Link>
 	);
