@@ -12,11 +12,9 @@ import { Check } from 'lucide-react';
 import CoursesStyles from './styles/courses.module.css';
 import { cn } from '@/lib/utils';
 import logoTrend from '../../../public/logo.webp';
-import fbIcon from '../../../public/redes/fb.webp';
-import wspIcon from '../../../public/redes/wsp.webp';
-import igIcon from '../../../public/redes/ig.webp';
-import ytIcon from '../../../public/redes/yt.webp';
+
 import trendPersonas from '../../../public/trend-personas-movil.png';
+import { socialLinks } from '@/common/data/redes';
 
 // Forzar que el componente se renderice solo en el cliente
 const BannerBlackFriday = dynamic(
@@ -33,24 +31,7 @@ const features = [
 	'Plantillas de anuncios y contenido para redes sociales.',
 	'Sesión en vivo de preguntas y respuestas.',
 ];
-const socialLinks = [
-	{
-		name: 'Facebook',
-		url: 'https://www.facebook.com/agenciadepublicidadparabellezatrend',
-		icon: fbIcon,
-	},
-	{
-		name: 'Whatsapp',
-		url: 'https://instagram.com',
-		icon: wspIcon,
-	},
-	{
-		name: 'Instagram',
-		url: 'https://www.instagram.com/trend_belleza',
-		icon: igIcon,
-	},
-	{ name: 'Youtube', url: 'https://twitter.com', icon: ytIcon },
-];
+
 export const CoursesPublicView = () => {
 	return (
 		<div className="bg-black ">

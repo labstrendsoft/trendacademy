@@ -1,0 +1,56 @@
+.fondoTop {
+	background: url('/trend-persona2.webp') no-repeat;
+	background-size: contain;
+	background-position: bottom right;
+	width: 100%;
+	mix-blend-mode: soft-light;
+	height: 100%;
+}
+
+.fondo {
+	background: url('/f1.svg') no-repeat left 0% center,
+		url('/f2.svg') no-repeat right 0% center,
+		radial-gradient(
+			circle at top -15% left 0%,
+			rgb(230, 36, 128, 0.8) -80%,
+			#080b1a2c 30%
+		),
+		radial-gradient(
+			circle at bottom 50% right 10%,
+			rgba(230, 36, 128, 0.8) -120%,
+			/* Mismos colores y opacidad */ #080b1a2c 20%
+		);
+	background-size: cover;
+	background-position: top;
+}
+
+.carouselShadow {
+	position: relative;
+}
+
+.carouselShadow::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -10px;
+	width: 14px;
+	height: 100%;
+	background-color: #090710;
+	box-shadow: 10px 0 20px 20px rgb(9, 7, 16);
+	z-index: 10;
+	pointer-events: none;
+	margin-left: -10px;
+}
+.carouselShadow::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: -10px;
+	width: 14px;
+	height: 100%;
+	background-color: #090710;
+	box-shadow: -10px 0 20px 20px rgb(9, 7, 16);
+	z-index: 10;
+	pointer-events: none;
+	margin-right: -10px;
+}

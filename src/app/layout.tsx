@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Montserrat } from 'next/font/google';
 import './globals.css';
 import localFont from 'next/font/local';
 const goldplay = localFont({
@@ -21,6 +21,11 @@ const geistSans = Geist({
 	subsets: ['latin'],
 });
 
+const montserrat = Montserrat({
+	variable: '--font-montserrat',
+	subsets: ['latin'],
+});
+
 const geistMono = Geist_Mono({
 	variable: '--font-geist-mono',
 	subsets: ['latin'],
@@ -37,9 +42,9 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="es">
 			<body
-				className={`${geistSans.variable} ${goldplay.className} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} ${goldplay.className} ${geistMono.variable} ${montserrat.variable} min-h-screen antialiased`}
 			>
 				{children}
 			</body>
