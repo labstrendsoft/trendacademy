@@ -13,9 +13,9 @@ export const Header = () => {
 	const { data: session } = useSession();
 	const isAuthenticated = !!session?.user;
 	return (
-		<header className="sticky top-0 w-full z-40 bg-trendacademy-morado drop-shadow-md ">
+		<header className="sticky top-0 w-full z-40 bg-[#161A31] drop-shadow-md ">
 			<div className=" flex h-16  items-center justify-between w-full max-w-[1100px] mx-auto ">
-				<Link href="/">
+				<Link href="/inicio">
 					<Image
 						src={logoTrend}
 						alt="logo de trendacademy"

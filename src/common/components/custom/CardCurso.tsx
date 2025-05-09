@@ -1,13 +1,15 @@
 import Image, { StaticImageData } from 'next/image';
 import ButtonAcademy from './ButtonAcademy';
 import CartIcon from '@public/iconos/cartIcon.webp';
+import { formatModuleCount } from '../../helpers/formatModuleCount';
+import { applyDiscount, formatPriceInSoles } from '../../helpers/formatPrice';
 
 interface CourseCardProps {
 	title: string;
 	imageAlt: string;
-	imageSrc: StaticImageData;
+	imageSrc: StaticImageData | string;
 	trendDescription?: string;
-	modules: string;
+	modules: number;
 	originalPrice: string;
 	discountedPrice: string;
 }
@@ -20,27 +22,16 @@ export default function CourseCard({
 	originalPrice,
 	discountedPrice,
 }: CourseCardProps) {
-	// Calcula el precio final aplicando el descuento
-	const calculateDiscountedAmount = () => {
-		const original = parseFloat(originalPrice);
-		const discountPercent = parseFloat(discountedPrice);
-
-		if (isNaN(original) || isNaN(discountPercent) || original <= 0) {
-			return null;
-		}
-
-		const discountAmount = original * (discountPercent / 100);
-		const finalPrice = original - discountAmount;
-
-		return finalPrice.toFixed(2); // retorna "999.50"
-	};
-
-	const finalPrice = calculateDiscountedAmount();
-
 	return (
 		<div className="rounded-lg overflow-hidden font-montserrat-fuente">
 			<div>
-				<Image src={imageSrc} alt={imageAlt} className=" object-cover" />
+				<Image
+					src={imageSrc}
+					alt={imageAlt}
+					className=" object-cover"
+					width={350}
+					height={350}
+				/>
 			</div>
 			<div className="bg-white p-4 text-black max-h-[200px]">
 				<div className="mb-2">
@@ -48,12 +39,12 @@ export default function CourseCard({
 						{title}
 					</h3>
 					{/* <p className="text-sm font-medium mt-1">{trendDescription}</p> */}
-					<p className="text-sm text-gray-500">{modules}</p>
+					<p className="text-sm text-gray-500">{formatModuleCount(modules)}</p>
 				</div>
 				<div className="flex flex-col gap-2.5">
 					<div className="flex items-center gap-2">
 						<p className="text-sm line-through text-gray-500">
-							S/ {originalPrice}
+							{formatPriceInSoles(originalPrice)}
 						</p>
 						<p className="text-sm  text-trendacademy-rosado">
 							{discountedPrice}% Dscto.
@@ -71,7 +62,7 @@ export default function CourseCard({
 							/>
 						}
 					>
-						{finalPrice}
+						{applyDiscount(originalPrice, discountedPrice)}
 					</ButtonAcademy>
 				</div>
 			</div>

@@ -3,11 +3,11 @@ import CourseCard from '@/common/components/custom/CardCurso';
 import Curso1 from '@public/curso1.png';
 import Curso2 from '@public/curso2.png';
 import Curso3 from '@public/curso3.png';
-export default function CursosTop() {
+export default function NuevosCursos() {
 	return (
 		<div className="text-white">
-			<h2 className="text-xl font-bold text-white text-center mb-12">
-				Conoce nuestros cursos top
+			<h2 className="text-xl font-bold text-white text-start mb-8">
+				Nuevos Cursos
 			</h2>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-10  mx-auto">
