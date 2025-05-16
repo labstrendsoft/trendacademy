@@ -7,8 +7,8 @@ import {
 	CarouselItem,
 	CarouselNext,
 	CarouselPrevious,
-} from '@/common/components/shadcnui/carousel';
-import anaImg from '../../../../public/testimonio.png';
+} from '@shadcnui/carousel';
+import anaImg from '@public/testimonio.png';
 import { cn } from '@/lib/utils';
 import StyleCarousel from '../styles/courses.module.css';
 

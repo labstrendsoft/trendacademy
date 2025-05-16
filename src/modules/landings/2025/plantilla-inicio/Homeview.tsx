@@ -7,11 +7,11 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import CustomVideoPlayer from './components/videoCustomize';
 
-import logoTrend from '../../../public/logo.webp';
-import fbIcon from '../../../public/redes/fb.webp';
-import wspIcon from '../../../public/redes/wsp.webp';
-import igIcon from '../../../public/redes/ig.webp';
-import ytIcon from '../../../public/redes/yt.webp';
+import logoTrend from '@public/logo.webp';
+import fbIcon from '@public/redes/fb.webp';
+import wspIcon from '@public/redes/wsp.webp';
+import igIcon from '@public/redes/ig.webp';
+import ytIcon from '@public/redes/yt.webp';
 // import CustomVideoPlayer from './components/videoCustomize';
 
 // const CustomVideoPlayer = dynamic(() => import('./components/videoCustomize'), {
@@ -72,7 +72,7 @@ export const Homeview = () => {
 					</p>
 					{showButton && (
 						<Link
-							href="/cursos/marketing-belleza"
+							href="/landing/marketing-belleza"
 							className={cn(
 								HomeStyles.fadeInUpMain,
 								'mb-4	 px-10 py-3.5 bg-[#054C9B] text-white rounded-lg text-xl sm:text-2xl  hover:bg-[#054C9B] transition'

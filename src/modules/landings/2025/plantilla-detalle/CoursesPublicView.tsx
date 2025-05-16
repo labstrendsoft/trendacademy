@@ -11,9 +11,9 @@ import { Lanzamiento } from './components/Lanzamiento';
 import { Check } from 'lucide-react';
 import CoursesStyles from './styles/courses.module.css';
 import { cn } from '@/lib/utils';
-import logoTrend from '../../../public/logo.webp';
+import logoTrend from '@public/logo.webp';
 
-import trendPersonas from '../../../public/trend-personas-movil.png';
+import trendPersonas from '@public/trend-personas-movil.png';
 import { socialLinks } from '@/common/data/redes';
 
 // Forzar que el componente se renderice solo en el cliente

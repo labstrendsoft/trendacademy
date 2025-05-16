@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import CoursesStyles from '../styles/courses.module.css';
 import Image from 'next/image';
-import cursoImg from '../../../../public/curso1.png';
+import cursoImg from '@public/curso1.png';
 
 interface CourseCardProps {
 	title: string;
