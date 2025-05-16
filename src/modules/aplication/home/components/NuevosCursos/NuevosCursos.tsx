@@ -1,8 +1,8 @@
 import ButtonAcademy from '@/common/components/custom/ButtonAcademy';
-import CourseCard from '@/common/components/custom/CardCurso';
-import Curso1 from '@public/curso1.png';
-import Curso2 from '@public/curso2.png';
-import Curso3 from '@public/curso3.png';
+// import CourseCard from '@/common/components/custom/CardCurso';
+// import Curso1 from '@public/curso1.png';
+// import Curso2 from '@public/curso2.png';
+// import Curso3 from '@public/curso3.png';
 export default function NuevosCursos() {
 	return (
 		<div className="text-white">
@@ -10,7 +10,7 @@ export default function NuevosCursos() {
 				Nuevos Cursos
 			</h2>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-10  mx-auto">
+			{/* <div className="grid grid-cols-1 md:grid-cols-3 gap-10  mx-auto">
 				<CourseCard
 					title="Marketing para salones de belleza"
 					imageAlt="Marketing digital"
@@ -39,7 +39,7 @@ export default function NuevosCursos() {
 					originalPrice="1999.00"
 					discountedPrice="50"
 				/>
-			</div>
+			</div> */}
 
 			<div className="text-center mt-8">
 				<ButtonAcademy

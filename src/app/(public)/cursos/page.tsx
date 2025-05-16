@@ -5,6 +5,5 @@ export default async function Cursos() {
 		next: { revalidate: 60 }, // Revalida cada 60s
 	});
 	const cursos = await res.json();
-	console.log(cursos);
 	return <CursosView cursos={cursos} />;
 }

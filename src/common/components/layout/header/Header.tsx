@@ -5,13 +5,9 @@ import Link from 'next/link';
 import { NavLinks } from './NavLinks';
 import logoTrend from '@public/logo.webp';
 import { Search } from 'lucide-react';
-import CartIcon from '@public/iconos/cartIcon.webp';
 import ButtonAcademy from '../../custom/ButtonAcademy';
-import { useSession } from 'next-auth/react';
-import { UserDropdownMenu } from './ProfileTop';
+import { CartButton } from '@root/src/modules/cart/components/CartButton';
 export const Header = () => {
-	const { data: session } = useSession();
-	const isAuthenticated = !!session?.user;
 	return (
 		<header className="sticky top-0 w-full z-40 bg-trendacademy-morado drop-shadow-md ">
 			<div className=" flex h-16  items-center justify-between w-full max-w-[1100px] mx-auto ">
@@ -34,28 +30,18 @@ export const Header = () => {
 						/>
 					</div>
 					<div className="hidden md:flex items-center gap-4 w-full">
-						<Link href="/cart" className="w-full ">
-							<Image
-								src={CartIcon}
-								alt="icono de cart"
-								className="object-cover mx-auto max-w-[28px]"
-							/>
-						</Link>
-						{isAuthenticated && <UserDropdownMenu usuario={session?.user} />}
-						{!isAuthenticated && (
-							<>
-								<ButtonAcademy href="/auth/login" variant="text">
-									Entrar
-								</ButtonAcademy>
-								<ButtonAcademy
-									href="/"
-									variant="filled"
-									className="whitespace-nowrap"
-								>
-									Crear Cuenta
-								</ButtonAcademy>
-							</>
-						)}
+						<CartButton />
+
+						<ButtonAcademy href="/auth/login" variant="text">
+							Entrar
+						</ButtonAcademy>
+						<ButtonAcademy
+							href="/"
+							variant="filled"
+							className="whitespace-nowrap"
+						>
+							Crear Cuenta
+						</ButtonAcademy>
 					</div>
 				</div>
 			</div>

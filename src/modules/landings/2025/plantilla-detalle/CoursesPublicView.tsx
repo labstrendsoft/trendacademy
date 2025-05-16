@@ -37,7 +37,7 @@ export const CoursesPublicView = () => {
 		<div className="bg-black ">
 			{/* Otro Banner con una fecha diferente */}
 			<div className={cn(CoursesStyles.transicionBanner, 'sticky z-30 top-0')}>
-				<BannerBlackFriday saleEndDate={new Date('2025-05-08T23:59:59')} />
+				<BannerBlackFriday saleEndDate={new Date('2025-07-08T23:59:59')} />
 			</div>
 			<div
 				className={cn(

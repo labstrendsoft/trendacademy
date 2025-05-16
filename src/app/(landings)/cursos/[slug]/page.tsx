@@ -1,4 +1,4 @@
-import { CoursesPublicView } from '@/modules/courses-public/CoursesPublicView';
+import { CoursesPublicView } from '@root/src/modules/landings/2025/plantilla-detalle/CoursesPublicView';
 
 type PageProps = {
 	params: Promise<{ slug: string }>; // params ahora es una promesa

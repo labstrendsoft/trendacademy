@@ -1,8 +1,8 @@
 import ButtonAcademy from '@/common/components/custom/ButtonAcademy';
-import CourseCard from '@/common/components/custom/CardCurso';
-import Curso1 from '@public/curso1.png';
-import Curso2 from '@public/curso2.png';
-import Curso3 from '@public/curso3.png';
+// import CourseCard from '@/common/components/custom/CardCurso';
+// import Curso1 from '@public/curso1.png';
+// import Curso2 from '@public/curso2.png';
+// import Curso3 from '@public/curso3.png';
 export default function CursosTop() {
 	return (
 		<div className="text-white">
@@ -11,7 +11,7 @@ export default function CursosTop() {
 			</h2>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-10  mx-auto">
-				<CourseCard
+				{/* <CourseCard
 					title="Marketing para salones de belleza"
 					imageAlt="Marketing digital"
 					imageSrc={Curso1}
@@ -38,7 +38,7 @@ export default function CursosTop() {
 					modules="3 módulos"
 					originalPrice="1999.00"
 					discountedPrice="50"
-				/>
+				/> */}
 			</div>
 
 			<div className="text-center mt-8">

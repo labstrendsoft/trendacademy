@@ -84,7 +84,7 @@ export default function Footer() {
 					</div>
 				</div>
 
-				<div className="mt-8 pt-6 border-t border-white text-center text-xs text-[#FFFFFF]">
+				<div className="mt-8 pt-6 border-t border-white/30 text-center text-xs text-[#FFFFFF]">
 					© 2025 TRENDACADEMY. TODOS LOS DERECHOS RESERVADOS
 				</div>
 			</div>

@@ -5,11 +5,10 @@ import Link from 'next/link';
 import { NavLinks } from './NavLinks';
 import logoTrend from '@public/logo.webp';
 import { Search } from 'lucide-react';
-import CartIcon from '@public/iconos/cartIcon.webp';
-import ButtonAcademy from '../../custom/ButtonAcademy';
 import { useSession } from 'next-auth/react';
 import { UserDropdownMenu } from './ProfileTop';
-export const Header = () => {
+import { CartButton } from '@root/src/modules/cart/components/CartButton';
+export const HeaderApp = () => {
 	const { data: session } = useSession();
 	const isAuthenticated = !!session?.user;
 	return (
@@ -34,28 +33,9 @@ export const Header = () => {
 						/>
 					</div>
 					<div className="hidden md:flex items-center gap-4 w-full">
-						<Link href="/cart" className="w-full ">
-							<Image
-								src={CartIcon}
-								alt="icono de cart"
-								className="object-cover mx-auto max-w-[28px]"
-							/>
-						</Link>
+						<CartButton />
+
 						{isAuthenticated && <UserDropdownMenu usuario={session?.user} />}
-						{!isAuthenticated && (
-							<>
-								<ButtonAcademy href="/auth/login" variant="text">
-									Entrar
-								</ButtonAcademy>
-								<ButtonAcademy
-									href="/"
-									variant="filled"
-									className="whitespace-nowrap"
-								>
-									Crear Cuenta
-								</ButtonAcademy>
-							</>
-						)}
 					</div>
 				</div>
 			</div>

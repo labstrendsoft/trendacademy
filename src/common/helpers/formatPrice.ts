@@ -1,8 +1,8 @@
-export const formatPriceInSoles = (price: string): string => {
-	const numericPrice = parseFloat(price); // Convierte el precio de string a número
+export const formatPriceInSoles = (price: string | number): string => {
+	const numericPrice = typeof price === 'number' ? price : parseFloat(price);
 
 	if (isNaN(numericPrice)) {
-		return 'S/ 0.00'; // Retorna un valor predeterminado si no es un número válido
+		return 'S/ 0.00';
 	}
 
 	return `S/ ${numericPrice.toLocaleString('es-PE', {

@@ -4,9 +4,9 @@ import { cn } from '@/lib/utils';
 import { EmblaOptionsType } from 'embla-carousel';
 import EmblaCarousel from './components/carouselBanner/CarouselMain';
 import { CarouselLogosClientes } from './components/carouselLogos/LogosCarousel';
-import CarouselAlumnos from './components/carouselAlumnos/CarouselAlumnosMain';
 import CursosTop from './components/CursosTop/CursosTop';
-import CaracteristicasMain from '../courses-public/components/caracteristicas/CarecteristicasMain';
+import CarouselAlumnos from './components/carouselAlumnos/CarouselAlumnosMain';
+import CaracteristicasMain from '../../landings/2025/plantilla-detalle/components/caracteristicas/CarecteristicasMain';
 
 const OPTIONS: EmblaOptionsType = {};
 

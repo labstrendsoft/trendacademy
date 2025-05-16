@@ -100,7 +100,7 @@ export function UserAuthRegisterForm() {
 											<Input
 												type="text"
 												disabled={isPending}
-												className="h-12 text-white bg-[#1a1d35] border-[#2a2d45] focus-visible:ring-0 focus-visible:border-gray-600 placeholder:text-gray-100/40"
+												className="h-12 text-white bg-[#070A19] border-[#161A31] focus-visible:ring-0 focus-visible:border-gray-600 placeholder:text-gray-100/40"
 												placeholder="name@example.com"
 												{...field}
 											/>
@@ -124,7 +124,7 @@ export function UserAuthRegisterForm() {
 												<Input
 													type={showPassword ? 'text' : 'password'}
 													disabled={isPending}
-													className="h-12 text-white bg-[#1a1d35] border-[#2a2d45] focus-visible:ring-0 focus-visible:border-gray-600 placeholder:text-gray-100/40"
+													className="h-12 text-white bg-[#070A19] border-[#161A31] focus-visible:ring-0 focus-visible:border-gray-600 placeholder:text-gray-100/40"
 													placeholder="Escribe tu contraseña"
 													{...field}
 												/>
@@ -162,7 +162,7 @@ export function UserAuthRegisterForm() {
 											<Input
 												type={showPassword ? 'text' : 'password'}
 												disabled={isPending}
-												className="h-12 text-white bg-[#1a1d35] border-[#2a2d45] focus-visible:ring-0 focus-visible:border-gray-600 placeholder:text-gray-100/40"
+												className="h-12 text-white bg-[#070A19] border-[#161A31] focus-visible:ring-0 focus-visible:border-gray-600 placeholder:text-gray-100/40"
 												placeholder="Vuelve a escribir tu contraseña"
 												{...field}
 											/>

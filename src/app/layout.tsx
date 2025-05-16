@@ -4,6 +4,7 @@ import './globals.css';
 import localFont from 'next/font/local';
 import { auth } from '../../auth';
 import { SessionProvider } from 'next-auth/react';
+import { CartSheet } from '../modules/cart/components/CartLateral';
 
 const goldplay = localFont({
 	src: [
@@ -50,8 +51,10 @@ export default async function RootLayout({
 		<SessionProvider session={session}>
 			<html lang="es" suppressHydrationWarning>
 				<body
-					className={`${geistSans.variable} ${goldplay.className} ${geistMono.variable} ${montserrat.variable} min-h-screen antialiased`}
+					className={`${montserrat.variable}  ${geistSans.variable} ${goldplay.className} ${geistMono.variable}  !font-montserrat-fuente min-h-screen antialiased`}
 				>
+					{/* contenido del carrito */}
+					<CartSheet />
 					{children}
 				</body>
 			</html>
