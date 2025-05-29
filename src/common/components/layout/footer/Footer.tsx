@@ -13,8 +13,8 @@ export default function Footer() {
 							<Link href="/" className="hover:text-gray-300">
 								Inicio
 							</Link>
-							<Link href="/nosotros" className="hover:text-gray-300">
-								Nosotros
+							<Link href="/comunidad" className="hover:text-gray-300">
+								Comunidad
 							</Link>
 							<Link href="/contacto" className="hover:text-gray-300">
 								Contacto

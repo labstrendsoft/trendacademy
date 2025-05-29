@@ -33,7 +33,7 @@ export const Header = () => {
 							Entrar
 						</ButtonAcademy>
 						<ButtonAcademy
-							href="/"
+							href="/auth/register"
 							variant="filled"
 							className="whitespace-nowrap"
 						>
