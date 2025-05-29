@@ -26,7 +26,8 @@ export const {
 
 			return token;
 		},
-		async session({ session, token }) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		async session({ session, token }: { session: any; token: any }) {
 			session.user = {
 				id: token.id,
 				email: token.email,

@@ -1,4 +1,5 @@
-import 'next-auth';
+import { DefaultSession } from 'next-auth';
+import { JWT as DefaultJWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {
 	interface Session {
@@ -26,8 +27,10 @@ declare module 'next-auth' {
 			role: string;
 		};
 	}
+}
 
-	interface JWT {
+declare module 'next-auth/jwt' {
+	interface JWT extends DefaultJWT {
 		id?: number;
 		email?: string;
 		role?: string;
