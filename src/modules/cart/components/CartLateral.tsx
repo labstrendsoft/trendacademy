@@ -8,16 +8,16 @@ import {
 } from '@shadcnui/sheet';
 import { useCartStore } from '../store/cart';
 import { useCartUIStore } from '../store/ui';
+import Link from 'next/link';
 
 export const CartSheet = () => {
 	const { cursos, eliminarCurso, limpiarCarrito } = useCartStore();
 	const { isCartOpen, cerrarCarrito } = useCartUIStore();
-	console.log(cursos);
 	return (
 		<Sheet open={isCartOpen} onOpenChange={cerrarCarrito}>
 			<SheetContent
 				side="right"
-				className="w-[320px] sm:w-[400px] font-montserrat-fuente"
+				className="w-[320px] sm:w-[400px] font-montserrat-fuente lg:hidden"
 			>
 				<SheetHeader>
 					<SheetTitle>Tu carrito</SheetTitle>
@@ -55,6 +55,12 @@ export const CartSheet = () => {
 							</button>
 						</>
 					)}
+					<Link
+						href="/carrito"
+						className="mt-4 w-full bg-red-600 text-white py-2 rounded"
+					>
+						Ir al carrito
+					</Link>
 				</div>
 			</SheetContent>
 		</Sheet>

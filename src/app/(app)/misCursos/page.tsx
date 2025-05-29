@@ -6,7 +6,6 @@ export default async function MisCursos() {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_API_BACKEND}/course/enrollments/${session?.user.id}`,
 		{
-			next: { revalidate: 60 },
 			headers: {
 				Authorization: `Bearer ${session?.user.token}`, // asegúrate que el token esté ahí
 			},
@@ -14,6 +13,5 @@ export default async function MisCursos() {
 	);
 
 	const cursos = await res.json();
-	console.log('asdasda:', cursos);
 	return <MisCursosView cursos={cursos} />;
 }

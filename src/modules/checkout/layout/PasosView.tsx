@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { CreditCardIcon, CheckCircleIcon, ShoppingCart } from 'lucide-react';
+import { CheckCircleIcon, ShoppingCart } from 'lucide-react';
 import { Progress } from '@shadcnui/progress';
 import { usePasosCheckoutStore } from '../store/pasos';
 import { ActiveLinks } from './ActiveLinks';
@@ -14,11 +14,11 @@ const PASOS = [
 		icon: <ShoppingCart className="size-4 md:size-5 " />,
 	},
 
-	{
-		name: 'Pago',
-		href: '/carrito/pago',
-		icon: <CreditCardIcon className="size-4 md:size-5" />,
-	},
+	// {
+	// 	name: 'Pago',
+	// 	href: '/carrito/pago',
+	// 	icon: <CreditCardIcon className="size-4 md:size-5" />,
+	// },
 	{
 		name: 'Confirmado',
 		href: '/pedidos/confirmacion',

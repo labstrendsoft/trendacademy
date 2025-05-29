@@ -9,12 +9,28 @@ declare module 'next-auth' {
 			role: string;
 		} & DefaultSession['user'];
 	}
-	interface User {
+	// interface User {
+	// 	token: string;
+	// 	user: {
+	// 		id: number;
+	// 		email: string;
+	// 		role: string;
+	// 	};
+	// }
+
+	interface User extends DefaultUser {
 		token: string;
 		user: {
 			id: number;
 			email: string;
 			role: string;
 		};
+	}
+
+	interface JWT {
+		id?: number;
+		email?: string;
+		role?: string;
+		token?: string;
 	}
 }

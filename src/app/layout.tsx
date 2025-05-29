@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import { auth } from '../../auth';
 import { SessionProvider } from 'next-auth/react';
 import { CartSheet } from '../modules/cart/components/CartLateral';
+import { Toaster } from 'sonner';
 
 const goldplay = localFont({
 	src: [
@@ -56,6 +57,7 @@ export default async function RootLayout({
 					{/* contenido del carrito */}
 					<CartSheet />
 					{children}
+					<Toaster richColors />
 				</body>
 			</html>
 		</SessionProvider>

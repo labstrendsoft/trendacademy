@@ -7,7 +7,8 @@ import logoTrend from '@public/logo.webp';
 import { Search } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { UserDropdownMenu } from './ProfileTop';
-import { CartButton } from '@root/src/modules/cart/components/CartButton';
+// import { CartButton } from '@root/src/modules/cart/components/CartButton';
+import { CartModal } from '@root/src/modules/cart/components/CartModal';
 export const HeaderApp = () => {
 	const { data: session } = useSession();
 	const isAuthenticated = !!session?.user;
@@ -33,7 +34,8 @@ export const HeaderApp = () => {
 						/>
 					</div>
 					<div className="hidden md:flex items-center gap-4 w-full">
-						<CartButton />
+						<CartModal />
+						{/* <CartButton /> */}
 
 						{isAuthenticated && <UserDropdownMenu usuario={session?.user} />}
 					</div>

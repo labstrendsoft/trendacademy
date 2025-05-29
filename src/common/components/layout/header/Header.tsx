@@ -6,7 +6,6 @@ import { NavLinks } from './NavLinks';
 import logoTrend from '@public/logo.webp';
 import { Search } from 'lucide-react';
 import ButtonAcademy from '../../custom/ButtonAcademy';
-import { CartButton } from '@root/src/modules/cart/components/CartButton';
 export const Header = () => {
 	return (
 		<header className="sticky top-0 w-full z-40 bg-trendacademy-morado drop-shadow-md ">
@@ -30,8 +29,6 @@ export const Header = () => {
 						/>
 					</div>
 					<div className="hidden md:flex items-center gap-4 w-full">
-						<CartButton />
-
 						<ButtonAcademy href="/auth/login" variant="text">
 							Entrar
 						</ButtonAcademy>

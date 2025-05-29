@@ -25,7 +25,7 @@ export default function CourseCard({ curso }: CourseCardProps) {
 	};
 	return (
 		<div className="rounded-lg overflow-hidden font-montserrat-fuente">
-			<div>
+			<div className="aspect-square">
 				<Image
 					src={imageUrl || ImagenNoDisponible}
 					alt={title}
